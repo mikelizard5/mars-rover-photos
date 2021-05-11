@@ -1,23 +1,23 @@
 {
   "devDependencies": {
-    "eslint": "^7.25.0",
+    "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^4.3.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@open-wc/testing": "^2.5.33",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "prettier": "^2.2.1",
+    "@typescript-eslint/parser": "^4.22.0",
+    "@web/dev-server": "^0.1.17",
+    "@web/test-runner": "^0.12.20",
+    "concurrently": "^5.3.0",
+    "deepmerge": "^4.2.2",
+    "eslint": "^7.25.0",
     "eslint-config-prettier": "^7.2.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
-    "@web/test-runner": "^0.12.20",
-    "@open-wc/testing": "^2.5.33",
-    "@open-wc/building-rollup": "^1.10.0",
-    "deepmerge": "^4.2.2",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.46.0",
-    "@web/dev-server": "^0.1.17",
-    "concurrently": "^5.3.0",
-    "typescript": "^4.2.4",
-    "tslib": "^2.2.0"
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
   },
   "scripts": {
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
@@ -34,8 +34,8 @@
   "author": "mars-photo-api",
   "license": "MIT",
   "dependencies": {
-    "lit-html": "^1.4.0",
-    "lit-element": "^2.5.0"
+    "lit-element": "^2.5.0",
+    "lit-html": "^1.4.0"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

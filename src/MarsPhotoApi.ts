@@ -3,14 +3,23 @@ import { openWcLogo } from './open-wc-logo.js';
 
 const fetchPOD = async () => {
   try {
-    const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
-    const data = await response.json()
-    console.log('NASA APOD data', data)
+    const response = await fetch(
+      'https://api.nasa.gov/planetary/apod?api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC'
+    );
+    const data = await response.json();
+    console.log('NASA APOD data', data);
+    const image = new Image(100, 100);
+    image.src = data.url;
+    document.getElementById('container')?.appendChild(image);
+    console.log(image);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
-
+};
+const image = new Image(100, 100);
+image.src = 'https://apod.nasa.gov/apod/image/2105/UluruOrion_Liu_1080.jpg';
+document.getElementById('container')?.appendChild(image);
+console.log(image);
 export class MarsPhotoApi extends LitElement {
   @property({ type: String }) title = 'Mars photo api';
 
@@ -56,6 +65,7 @@ export class MarsPhotoApi extends LitElement {
       margin-left: 5px;
     }
   `;
+
   response: Object;
 
   static get properties() {
@@ -72,19 +82,22 @@ export class MarsPhotoApi extends LitElement {
 
   async firstUpdated() {
     try {
-      const response = await fetch('https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=2&api_key=DEMO_KEY')
-      const data = await response.json()
-      console.log('NASA MARS ROVER PHOTOS', data)
+      const response = await fetch(
+        'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=2&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC'
+      );
+      const data = await response.json();
+      console.log('NASA MARS ROVER PHOTOS', data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   render() {
     return html`
       <main>
-        <div class="logo">${openWcLogo}</div>
+        <div>${openWcLogo}</div>
         <h1>${this.title}</h1>
+        <div id="container"></div>
 
         <p>Edit <code>src/MarsPhotoApi.ts</code> and save to reload.</p>
         <a
