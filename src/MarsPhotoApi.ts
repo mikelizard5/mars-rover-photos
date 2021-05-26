@@ -1,5 +1,4 @@
 import { LitElement, html, css, property } from 'lit-element';
-import { openWcLogo } from './open-wc-logo.js';
 
 const fetchPOD = async () => {
   try {
@@ -7,66 +6,52 @@ const fetchPOD = async () => {
       'https://api.nasa.gov/planetary/apod?api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC'
     );
     const data = await response.json();
-    console.log('NASA APOD data', data);
-    const image = new Image(100, 100);
-    image.src = data.url;
-    document.getElementById('container')?.appendChild(image);
-    console.log(image);
+    const photoMPA = document.querySelector('mars-photo-api');
+    if (photoMPA && photoMPA.shadowRoot) {
+      const shadow = photoMPA.shadowRoot.getElementById('quote');
+      if (shadow) {
+        console.log(shadow);
+        shadow.style.backgroundImage = `url(${data.url})`;
+      }
+    }
   } catch (error) {
     console.log(error);
   }
 };
-const image = new Image(100, 100);
-image.src = 'https://apod.nasa.gov/apod/image/2105/UluruOrion_Liu_1080.jpg';
-document.getElementById('container')?.appendChild(image);
-console.log(image);
+
 export class MarsPhotoApi extends LitElement {
   @property({ type: String }) title = 'Mars photo api';
 
   static styles = css`
-    :host {
-      min-height: 100vh;
+    header {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      font-size: calc(10px + 2vmin);
-      color: #1a2b42;
-      max-width: 960px;
-      margin: 0 auto;
-      text-align: center;
-      background-color: var(--mars-photo-api-background-color);
+      padding: 20px;
+      color: black;
+      background-color: rgba(248, 248, 248, 255);
+      font-family: 'Times New Romans', serif;
+      text-transform: uppercase;
     }
-
-    main {
-      flex-grow: 1;
-    }
-
-    .logo > svg {
-      margin-top: 36px;
-      animation: app-logo-spin infinite 20s linear;
-    }
-
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
+    #quote {
+      height: 500px;
+      display: flex;
+      justify-content: center;
       align-items: center;
     }
-
-    .app-footer a {
-      margin-left: 5px;
+    .quote {
+      color: white;
+      font-size: 40px;
+      font-family: 'Brush Script MT', Brush Script Std, cursive;
+    }
+    .credit {
+      color: white;
+      font-size: 20px;
+      font-family: 'URW Chancery L', serif;
     }
   `;
 
   response: Object;
+
+  roverName = 'curiosity';
 
   static get properties() {
     return {
@@ -82,43 +67,51 @@ export class MarsPhotoApi extends LitElement {
 
   async firstUpdated() {
     try {
+      const rover: HTMLSelectElement = document.getElementById(
+        'Rover'
+      ) as HTMLSelectElement;
+      // const roverValue = rover.value;
+      console.log(rover);
       const response = await fetch(
-        'https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&page=2&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC'
+        `https://api.nasa.gov/mars-photos/api/v1/rovers/${this.roverName}/photos?sol=1000&page=2&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC`
       );
       const data = await response.json();
       console.log('NASA MARS ROVER PHOTOS', data);
+      for (const photo of data.photos) {
+        const image = new Image(600, 500);
+        image.src = photo.img_src;
+        document.body.appendChild(image);
+      }
     } catch (error) {
       console.log(error);
     }
   }
 
+  // update_rover_name(){
+  //   const select = document.getElementById('Rover') as HTMLSelectElement;
+  //   console.log(select);
+  //   this.roverName = select.value;
+  //   console.log(this.roverName);
+  //   console.log('it ran');
+  // }
   render() {
     return html`
-      <main>
-        <div>${openWcLogo}</div>
-        <h1>${this.title}</h1>
-        <div id="container"></div>
-
-        <p>Edit <code>src/MarsPhotoApi.ts</code> and save to reload.</p>
-        <a
-          class="app-link"
-          href="https://open-wc.org/guides/developing-components/code-examples"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Code examples
-        </a>
-      </main>
-
-      <p class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
-      </p>
-    `;
+       <main>
+        <header>
+          <img src="src/MarsLogo.jpg" alt="logo" width="100" height="100"></img>
+          <h1 class = "title">Mars Rover Photos</h1>
+        </header>
+          <div id="quote">
+            <div>
+              <p class="quote"> " My battery is low and it's getting dark."</p>
+              <p class="credit"> - Journalist, Jacob Margolis, translation of Opportunity rover last transmission on June 10, 2018.</p>
+            </div>
+          </div>
+            <select id="Rover" @blur="put function here">
+              <option value="opportunity">Opportunity
+              <option value="spirit">Spirit
+              <option value="curiosity" selected>Curiosity
+            </select>
+       </main>`;
   }
 }
