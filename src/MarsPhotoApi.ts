@@ -51,7 +51,7 @@ export class MarsPhotoApi extends LitElement {
 
   response: Object;
 
-  roverName = 'curiosity';
+  
 
   static get properties() {
     return {
@@ -64,17 +64,13 @@ export class MarsPhotoApi extends LitElement {
     this.response = [];
     fetchPOD();
   }
+  
+  
+roverName = 'curiosity';
 
   async firstUpdated() {
     try {
-      const rover: HTMLSelectElement = document.getElementById(
-        'Rover'
-      ) as HTMLSelectElement;
-      // const roverValue = rover.value;
-      console.log(rover);
-      const response = await fetch(
-        `https://api.nasa.gov/mars-photos/api/v1/rovers/${this.roverName}/photos?sol=1000&page=2&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC`
-      );
+      const response = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${this.roverName}/photos?sol=1000&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC`);
       const data = await response.json();
       console.log('NASA MARS ROVER PHOTOS', data);
       for (const photo of data.photos) {
@@ -86,14 +82,14 @@ export class MarsPhotoApi extends LitElement {
       console.log(error);
     }
   }
+  updateRoverName(){
+    const marsSelect = document.querySelector('mars-photo-api') as HTMLElement;
+    const select = marsSelect.shadowRoot?.getElementById('Rover') as HTMLSelectElement;
+    const rover = select.value;
+    console.log(rover);
+    this.roverName = rover;
+  }
 
-  // update_rover_name(){
-  //   const select = document.getElementById('Rover') as HTMLSelectElement;
-  //   console.log(select);
-  //   this.roverName = select.value;
-  //   console.log(this.roverName);
-  //   console.log('it ran');
-  // }
   render() {
     return html`
        <main>
@@ -107,10 +103,10 @@ export class MarsPhotoApi extends LitElement {
               <p class="credit"> - Journalist, Jacob Margolis, translation of Opportunity rover last transmission on June 10, 2018.</p>
             </div>
           </div>
-            <select id="Rover" @blur="put function here">
+            <select id="Rover" @change=${this.updateRoverName}>
               <option value="opportunity">Opportunity
               <option value="spirit">Spirit
-              <option value="curiosity" selected>Curiosity
+              <option value="curiosity">Curiosity
             </select>
        </main>`;
   }
