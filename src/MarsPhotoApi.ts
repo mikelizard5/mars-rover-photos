@@ -66,28 +66,31 @@ export class MarsPhotoApi extends LitElement {
   }
   
   
-roverName = 'curiosity';
 
-  async firstUpdated() {
+  async Updated(rover: string, camera: string, sol: string) {
     try {
-      const response = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${this.roverName}/photos?sol=1000&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC`);
+      const response = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=y4M5p0atf7SnqbiSK914VHL3HpbhwXqkQhAfyYiC`);
       const data = await response.json();
       console.log('NASA MARS ROVER PHOTOS', data);
       for (const photo of data.photos) {
         const image = new Image(600, 500);
         image.src = photo.img_src;
         document.body.appendChild(image);
-      }
+      } 
     } catch (error) {
       console.log(error);
     }
   }
-  updateRoverName(){
+  
+  updateImage(){
     const marsSelect = document.querySelector('mars-photo-api') as HTMLElement;
-    const select = marsSelect.shadowRoot?.getElementById('Rover') as HTMLSelectElement;
-    const rover = select.value;
-    console.log(rover);
-    this.roverName = rover;
+    const selectRover = marsSelect.shadowRoot?.getElementById('Rover') as HTMLSelectElement;
+    const rover = selectRover.value;
+    const selectCamera = marsSelect.shadowRoot?.getElementById('Camera') as HTMLSelectElement;
+    const camera = selectCamera.value;
+    const selectSol = marsSelect.shadowRoot?.getElementById('Sol') as HTMLSelectElement;
+    const sol = selectSol.value;
+    this.Updated(rover,camera,sol);
   }
 
   render() {
@@ -103,11 +106,37 @@ roverName = 'curiosity';
               <p class="credit"> - Journalist, Jacob Margolis, translation of Opportunity rover last transmission on June 10, 2018.</p>
             </div>
           </div>
-            <select id="Rover" @change=${this.updateRoverName}>
+          <div id="userInputs">  
+            <select id="Rover" @change=${this.updateImage}>
               <option value="opportunity">Opportunity
               <option value="spirit">Spirit
-              <option value="curiosity">Curiosity
+              <option value="curiosity" selected>Curiosity
             </select>
+            <select id="Camera" @change=${this.updateImage}>
+              <option value="fhaz">FHAZ
+              <option value="rhaz">RHAZ
+              <option value="mast">MAST
+              <option value="CHEMCAM">CHEMCAM
+              <option value="MAHLI">MAHLI
+              <option value="MARDI">MARDI
+              <option value="NAVCAM" selected>NAVCAM
+              <option value="PANCAM">PANCAM
+              <option value="MINITES">MINITES
+            </select>
+            <select id="Sol" @change=${this.updateImage}>
+              <option value="100">100
+              <option value="200">200
+              <option value="300">300
+              <option value="400">400
+              <option value="500">500
+              <option value="600">600
+              <option value="700">700
+              <option value="800">800
+              <option value="900">900
+              <option value="1000"selected>1000
+            </select>
+          </div>
+
        </main>`;
   }
 }
